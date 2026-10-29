@@ -73,9 +73,10 @@ FK.S({
 
 FK.S({
   id: 'g_gun_retry', ch: 2, loc: 'garage', title: 'The Gun, Second Try', teaser: 'You read the manual. Try again.', once: false,
-  req: 'manual_read & !gun_ready',
+  req: 'seen:g_gun & !gun_ready',
   text: [
     'The gun lies on the bench where you left it, glass bulb dark, manual open beside it. You have slept on it. You have stared at the diagram until it started to make sense in the way dreams do.',
+    { if: '!manual_read', t: 'Last time you tried to fix it with your hands. This time you read the little manual first.' },
     'There is a pinch-clip on the fluid line. You are almost sure that\'s the thing.'
   ],
   choices: [
@@ -596,6 +597,19 @@ FK.S({
     { t: 'Go. Now. Don\'t look back at the photos.', a: 'flee', fx: ['axis:exit=walkaway'], next: '@ending' },
     { t: 'Take the gun and pick a world at random.', a: 'flee', req: 'gun_ready', fx: ['axis:exit=lost'], next: '@ending' },
     { t: 'Not yet.', a: 'neutral', res: 'You put the bag back by the door. Not yet. You want to know how this ends. That is a new feeling, and you don\'t trust it.', next: 'hub' }
+  ]
+});
+
+FK.S({
+  id: 'x_overtime', ch: 2, loc: 'any', forced: true, prio: 9, title: 'They Come Anyway',
+  req: 'turn>=130 & settled<2',
+  text: [
+    'Weeks go by. You have done what you can do here, and some of what you can\'t. The house has settled around you like a coat.',
+    'It doesn\'t matter how quiet you\'ve been. A house that someone lives in is a house that someone will eventually walk into.',
+    'Tonight, someone does.'
+  ],
+  choices: [
+    { t: 'Go and meet them.', a: 'neutral', fx: ['+early_visit', '+overtime'], next: '@chapter' }
   ]
 });
 

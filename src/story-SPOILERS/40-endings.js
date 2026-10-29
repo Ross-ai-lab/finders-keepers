@@ -227,7 +227,7 @@ FK.endings({
     { if: 'axis:prisoners=kept', t: 'The cell in the corner of the garage is never empty now. You feed them well. You tell yourself that matters.' },
     { if: 'axis:prisoners=recruited', t: 'The people who used to be your prisoners run the garage night shift now. They call you boss. Two of them mean it.' },
     { if: 'axis:prisoners=sold', t: 'You sold your prisoners. The money lasted a season. The faces have lasted longer.' },
-    { if: 'axis:prisoners=executed', t: 'Nothing grows in the far corner of the yard. Biscuit won\'t go near it. Neither will you.' },
+    { if: 'axis:prisoners=executed', t: 'Nothing grows in the far corner of the yard. Animals won\'t go near it. Neither will you.' },
     { if: 'rec_audited', t: 'The Reclaimers are still being audited. Their leader writes you a letter every month asking for help with the forms.' },
     { if: 'rec_sold_brass', t: 'You think about the Reclaimer leader\'s face sometimes. "We were the ones who got sold." He was right. You did it anyway.' },
     { if: 'smi_dolores', t: 'Across the street, a family of Smiths who aren\'t the Smiths lives with Dolores Pike. Their Jerry mows both lawns. Their Beth and Dolores play cards on Thursdays and cheat.' },

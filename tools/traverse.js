@@ -231,7 +231,10 @@ function walk(build, scorer, maxSteps, start) {
     try { FK.act(s, a); } catch (e) { problem(`engine error after ${trail.slice(-6).join(' > ')}: ${e.message}`); return { s, end: null, trail }; }
     if (s.screen.type === 'story' && a.type !== 'choice') checkpoint = FK.clone(s);
   }
-  loops.push({ build, trail: trail.slice(-20) });
+  // stuck = the last stretch was nothing but moving between places, waiting and continuing
+  const tail = trail.slice(-80);
+  if (tail.every(k => /^(travel|wait|continue):/.test(k))) softlocks.push({ build, screen: 'aimless loop', loc: s.loc, ch: s.ch, trail: tail.slice(-12) });
+  else loops.push({ build, trail: trail.slice(-20) });
   return { s, end: null, trail };
 }
 
@@ -541,4 +544,5 @@ if (problems.length) {
   if (VERBOSE) warn.forEach(w => console.log('  ~ ' + w));
   process.exit(1);
 }
+if (VERBOSE) warn.forEach(w => console.log('  ~ ' + w));
 console.log('\nOK: every storylet, outcome, target, upgrade, skill, chapter and core ending is reachable.');

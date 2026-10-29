@@ -71,9 +71,9 @@ The raw answers behind the rules above, kept here because they existed only in c
 
 | | In this slice |
 |---|---|
-| Scenes (storylets) | 117 |
-| Choices | 497, with 531 distinct outcomes |
-| Endings | 579: 570 core endings built from four independent axes, plus 9 early exits. Every ending also has an epilogue assembled from what you did, so the same core ending reads differently run to run (the route checker saw over 2,400 distinct ending texts). |
+| Scenes (storylets) | 118 |
+| Choices | 498, with 532 distinct outcomes |
+| Endings | 579: 570 core endings built from four independent axes, plus 9 early exits. Every ending also has an epilogue assembled from what you did, so the same core ending reads differently run to run (the route checker sees well over 1,500 distinct ending texts per pass). |
 | Builds | 16 starting builds (4 knacks × 4 road habits) that decide which solutions you see |
 | Systems | inventory grid, portal map, 4 puzzle types, home base with 6 upgrades, 4 stats, a 16-skill tree in 4 branches, reputation with "X will remember that" notes, prisoners, companions, an exposure meter (how close someone is to walking in) |
 | Length | a full run is roughly 60–90 minutes of reading (about 13,000 words and 70 choices); an early exit can come much sooner. The whole slice is about 43,000 words. |
@@ -120,7 +120,7 @@ Rebuilds `Finders Keepers.html` from `src/`. Run it after any edit.
 node tools/traverse.js
 ```
 
-The route checker, about two minutes. It first checks statically that every requirement parses and that every flag, item, skill, upgrade, prisoner, place and target a scene needs is actually produced somewhere. Then it plays thousands of runs across all 16 builds (deaths reload, like in the game), steers extra runs toward anything not yet reached (and away from things that would send the story elsewhere), and finally steers runs toward every one of the 579 endings. It fails, listing ids only, if any scene, choice outcome, travel route, upgrade, skill, chapter or ending is unreachable, or if any run gets stuck with nothing to do. Use `--quick` for a faster, less thorough pass and `--seed=N` to vary the runs.
+The route checker, under a minute. It first checks statically that every requirement parses and that every flag, item, skill, upgrade, prisoner, place and target a scene needs is actually produced somewhere. Then it plays thousands of runs across all 16 builds (deaths reload, like in the game), steers extra runs toward anything not yet reached (and away from things that would send the story elsewhere), and finally steers runs toward every one of the 579 endings. It fails, listing ids only, if any scene, choice outcome, travel route, upgrade, skill, chapter or ending is unreachable, or if any run gets stuck with nothing to do. Use `--quick` for a faster, less thorough pass and `--seed=N` to vary the runs.
 
 ```bash
 node tools/browser-check.js

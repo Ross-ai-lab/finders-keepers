@@ -298,3 +298,7 @@ plan; ids are kept non-descriptive in visible places.
 - Puzzles: garage keypad (code is the dinner date 6/14 backwards: 4160), basement fuse box (lights-out),
   scrambled coordinates dial (TRIANGLE, FISH, EYE — shown on the map screen first), the Hinge vault
   (seating order from the photo: FLASK Rick, HORSE Beth, TIE Jerry, PHONE Summer, PENCIL Morty).
+- Pressure tuning: every portal trip out raises exposure by 1 (the green flash is visible from the
+  street). Exposure 10 in chapter 2 = the visitors come early. If a run stalls (turn ≥ 130 with fewer
+  than two worlds settled) a forced scene, "They Come Anyway", ends chapter 2. A failed first attempt
+  at the gun always unlocks a second attempt (this was a soft-lock).

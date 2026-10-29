@@ -121,7 +121,7 @@ FK.loc('house', {
     { if: 'heat<4', t: 'For now, nobody knows you\'re here. Keep it that way.' },
     { if: 'caretaker_off', t: 'The smoke detector\'s little red light is dark. The house is quieter without it, and somehow lonelier.' },
     { if: 'cap:dolores', t: 'Somewhere upstairs, the neighbour you tied up is very quiet. You try not to think about that.' },
-    { if: 'ch==2', t: 'The garage door stands open behind the kitchen. Green light leaks under it at odd hours.' }
+    { if: 'ch==2', t: 'The garage door stands open behind the kitchen. Green light leaks under it at odd hours, and every trip through the portal lights up the street for a second. People notice.' }
   ],
   travel: [
     { to: 'garage', label: 'Go into the garage', req: 'garage_open' }
@@ -137,13 +137,14 @@ FK.loc('garage', {
     { if: '!gun_ready', t: 'The portal gun hangs on its hook, dark. Something in it is broken or empty.' },
     { if: 'captives>=1 & up:cell', t: 'Your prisoners sit behind the chain-link in the corner and watch you work.' },
     { if: 'captives>=1 & !up:cell', t: 'Your prisoners are zip-tied to the shelving in the corner. It is not a good long-term plan.' },
-    { if: 'up:grid', t: 'Your security grid ticks over quietly: every door, every window, every shadow on the drive.' }
+    { if: 'up:grid', t: 'Your security grid ticks over quietly: every door, every window, every shadow on the drive.' },
+    { if: 'heat>=7', t: 'Somebody is going to come. You can feel it in the street: the slow cars, the curtains, the quiet. Lie low, or be ready.' }
   ],
   travel: [
     { to: 'house', label: 'Back into the house' },
-    { to: 'reach', label: 'Portal: Pallid Reach', req: 'gun_ready & dest:reach & ch==2' },
-    { to: 'cinder', label: 'Portal: Cinderfall', req: 'gun_ready & dest:cinder & ch==2' },
-    { to: 'drift', label: 'Portal: the Drift', req: 'gun_ready & dest:drift & ch==2' }
+    { to: 'reach', label: 'Portal: Pallid Reach', req: 'gun_ready & dest:reach & ch==2' , fx: ['heat+1'] },
+    { to: 'cinder', label: 'Portal: Cinderfall', req: 'gun_ready & dest:cinder & ch==2' , fx: ['heat+1'] },
+    { to: 'drift', label: 'Portal: the Drift', req: 'gun_ready & dest:drift & ch==2' , fx: ['heat+1'] }
   ],
   wait: { text: 'You sit on an upturned bucket and wait for your hands to stop shaking. The garage ticks as it cools. Nobody comes through the door, or the wall, or the air.', fx: ['heat-1', 'hp+1'] }
 });
