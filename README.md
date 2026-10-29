@@ -14,6 +14,7 @@ A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty un
 - **`the-smiths-are-gone-not-dead`** — Rick and his family have vanished from this universe; their fate is the central mystery. The house and garage are free for the player to take over.
 - **`play-the-drifter`** — The player is a fixed character with a name and past: a drifter who squats in empty houses and picks the wrong one. Ordinary at the start, alone, no romance, and free to become a real villain.
 - **`other-universes-may-visit`** — Other universes' Ricks, Mortys and Smiths may appear.
+- **`survival-tension-and-clashes`** — The core is science survival and tension: the constant feeling that the owner could walk back in at any moment. The other half is clashes through the portal: fighting, killing or capturing aliens in other dimensions. Jokes stay, as seasoning.
 - **`tone-dry-plain-no-gore-horror`** — Dry jokes now and then, violence described plainly, tension and dread allowed, no gore horror ([profile](../../../Knowledge/ross-rustam-profile.md)).
 
 ## Width doctrine
@@ -27,7 +28,7 @@ A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty un
 
 ## Systems
 
-- **`systems-he-asked-for`** — Inventory grid, a portal map of destinations, puzzles, a home base to build up, stats and skills, a skill tree (learning Rick's science). Fights are story choices. No timed choices. Death reloads the last save. Show "X will remember that" when a consequence lands. Difficulty fair: bad choices hurt.
+- **`systems-he-asked-for`** — Inventory grid, a portal map of destinations, puzzles, a home base to build up, stats and skills, a skill tree (learning Rick's science). Fights are story choices, and an enemy can be killed or captured. No timed choices. Death reloads the last save. Show "X will remember that" when a consequence lands. Difficulty fair: bad choices hurt.
 - **`no-images`** — No generated or scene images: the workspace has no image generator ([image.md](../../../Knowledge/image.md) `no-scripted-image-generator-exists`). Visuals come from code: procedural moving backgrounds (rain, fire, snow, portal glow), the map and the interface. Sound: ambient beds and music from the audio pipeline ([audio.md](../../../Knowledge/audio.md)).
 - **`long-pages-are-fine`** — He asked for fairly long text per screen (5 of 7 toward book pages).
 
