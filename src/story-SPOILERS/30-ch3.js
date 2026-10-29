@@ -15,10 +15,12 @@ FK.S({
   ],
   choices: [
     { t: 'Go and see who it is.', a: 'neutral', out: [
-      { req: 'jerry_invited', next: 'v_smi_arrive' },
+      { req: 'jerry_invited | posed_as_jerry & jerry_sheltered', next: 'v_smi_arrive' },
       { req: 'axis:drift=burned | axis:drift=harvested & rep:bloom<=-4 | rep:bloom<=-5', next: 'v_blo_arrive' },
       { req: 'axis:cinder=cheated | axis:cinder=burned | rep:brass<=-4 | robbed_brass', next: 'v_syn_arrive' },
       { req: 'axis:reach=ruined | rep:tollkeepers<=-4 | dead:vell', next: 'v_tol_arrive' },
+      { req: 'robbed_noodle | sold_noodle', next: 'v_ric_arrive' },
+      { req: 'officer_down | portaled_cops | rep:officer<=-3 | heat>=9 & !paid_bill', next: 'v_pol_arrive' },
       { next: 'v_rec_arrive' }
     ] }
   ]
@@ -87,6 +89,12 @@ FK.S({
       res: 'You hold up a garage door remote and say, quite calmly, that the house is wired, every room, and if your thumb comes off this button the street becomes a crater. You tell them where the charges are. You describe the wiring. Every detail is invented and every one is perfect. The leader looks at your thumb for a long time. Then he backs out of the door, and his people back out after him.', next: 'c3_after' },
     { t: 'Ask the Caretaker for help.', a: 'talk', w: 3, req: 'rep:caretaker>=3 & !caretaker_off & !caretaker_gone', fx: ['axis:climax=tricked', '+rec_tricked', '+caretaker_saved', 'rep:caretaker+2'],
       res: '"Finally," says the house. Every light goes out. Every door slams. Every speaker in every appliance starts talking at once, in a dozen voices, Ricks and Beths and Jerrys and police sirens and a dog that isn\'t there. The microwave screams. The TV shows them their own faces, live, from cameras they didn\'t see. They break. They run. "I have wanted to do that for three weeks," says the Caretaker.', next: 'c3_after' },
+    { t: 'Send word to the toll gate. Let the Tollkeepers audit them.', a: 'talk', w: 3, req: 'vell_ally | axis:reach=allied & rep:vell>=2', fx: ['axis:climax=tricked', '+rec_audited', 'rep:vell+1'],
+      res: 'You light the transit seal Vell gave you. Ten minutes later the kitchen is full of clerks with clipboards. "Unregistered crossing," says the lead clerk. "Undeclared salvage. Two hundred people\'s worth of unpaid tolls. All assets are frozen pending audit." The Reclaimers\' compasses, guns and portal pistols are tagged and boxed one by one while the leader stares in disbelief. The audit will take, Vell estimates, about four hundred years.', next: 'c3_after' },
+    { t: 'Biscuit has been growling at the hall for an hour. Trust the dog.', a: 'force', w: 3, req: 'dog_guard', fx: ['axis:climax=captured', '+rec_caught', 'rep:reclaimers-3'],
+      res: 'You heard the dog before you heard them, so you were behind the kitchen door when the first one came through it. Biscuit takes the second one by the ankle. In the confusion you have the leader on the floor and his compass in your hand. The rest decide that a squatter with a dog and a crowbar is not on the inventory. You tie up the ones who stay.', next: 'c3_after' },
+    { t: 'Call your partner in Cinderfall. Brass buys inventory.', a: 'betray', w: 3, req: 'axis:cinder=partner', fx: ['axis:climax=soldout', '+rec_sold_brass', 'rep:reclaimers-4', 'rep:brass+2', 'chits+5'],
+      res: 'A hot portal opens in the hall and Syndicate men walk through it with nets. Brass follows, glowing with pleasure. "Reclaimers," it says. "Two hundred people who collect things. Do you know how much the mining worlds pay for people who already know how to carry crates?" The leader looks at you as they take him. "We were the ones who got sold," he says. "That was the whole point of us." You get a cut.', next: 'c3_after' },
     { t: 'Run. Out the back, and don\'t stop.', a: 'flee', w: 3, fx: ['axis:climax=fled', '+rec_fled'],
       res: 'You go out of the back door at a dead run, over the fence, past the dog house, into the night. Behind you, someone shouts, and then nobody follows. They don\'t need you. They have the house. You spend the night under the footbridge two streets away, listening to the sound of them taking your life apart.', next: 'c3_after' },
     { t: 'Give them what they really want: tell them the old man is under their feet.', a: 'betray', w: 3, req: 'mystery>=1 | sold_family', fx: ['axis:climax=soldout', '+sold_out_family', 'rep:family-5', 'rep:reclaimers+3'],
@@ -144,6 +152,10 @@ FK.S({
       res: 'You slap Rick\'s quitclaim on the table, your name on the bottom, and point to the line about the twelve percent share in the Pallid Reach concession. "You\'re seizing the assets of a shareholder in your own gate," you say. "Check your bylaws." The Auditor checks its bylaws. The Auditor checks them again. Its eyes cycle through every colour. "...Conflict of interest," it says faintly. "Withdrawing." They leave. You hear them arguing in the portal.', next: 'c3_after' },
     { t: 'Hide everything in the garage and let them seize an empty house.', a: 'sneak', w: 3, req: 'sneak>=3 | skill:ghoststep', fx: ['axis:climax=tricked', '+tol_tricked'],
       res: 'While they tag the living room, you clear the garage: the gun in the car, the car under the tarp, the jars behind the paint. When the clerks get to the garage, it\'s a dusty room full of beer cans. The Auditor tags the beer cans with great dignity. They take the couch and the recliner and, for reasons nobody explains, the toaster. Everything that matters stays.', next: 'c3_after' },
+    { t: 'Brass buys your debt. Partners look after partners.', a: 'talk', w: 3, req: 'axis:cinder=partner', fx: ['axis:climax=talked', '+tol_brass', 'rep:brass+1', 'rep:tollkeepers+1'],
+      res: 'A hot little portal opens on the kitchen counter and a brass hand passes through a sealed envelope. Inside: a promissory note from the Cinder Syndicate, covering your debt in full, at an interest rate that makes the Auditor\'s eyes flicker with respect. "Acceptable," it says. You will owe Brass forever now. That is a different kind of trap, but it\'s a warmer one.', next: 'c3_after' },
+    { t: 'Breathe out the spores you brought back from the Drift.', a: 'gadget', w: 3, req: 'axis:drift=friend | axis:drift=grafted | spore_friend', fx: ['axis:climax=tricked', '+tol_spored', 'rep:bloom+1'],
+      res: 'The spores come off your skin and your hair and the little cap in your pocket, slow and green, and the Tollkeepers breathe them in, and remember. Their own homes. Their first ledger. Their mothers. The Auditor stands in your kitchen with its scroll hanging from one hand, weeping quietly from a hundred eyes, and then simply walks back through the portal, and its clerks follow, and nobody remembers the invoice at all.', next: 'c3_after' },
     { t: 'Leave. Let them take the house. You\'re not dying for a couch.', a: 'flee', w: 3, fx: ['axis:climax=fled', '+tol_fled'],
       res: 'You pick up your bag, the one that is always by the back door, and walk out through the kitchen while the clerks tag the fridge. Nobody stops you. You were never on the inventory.', next: 'c3_after' },
     { t: 'Invoice the old man instead. Show them the heater.', a: 'betray', w: 3, req: 'mystery>=1 | sold_family', fx: ['axis:climax=soldout', '+sold_out_family', 'rep:family-5', 'rep:tollkeepers+2'],
@@ -201,6 +213,8 @@ FK.S({
       res: 'You tell Brass the vault is in the garage, behind the map screen. Its men go in after it. You lock the door behind them and fire a portal at the garage floor, under their feet: home to Cinderfall, the fast way. You hear Brass ringing with rage as it falls. You close it. The hallway is just a burnt hallway now.', next: 'c3_after' },
     { t: 'Bluff: Rick is coming back tonight, and Rick remembers who robbed him.', a: 'talk', w: 3, req: 'skill:liar | mouth>=5', fx: ['axis:climax=tricked', '+syn_tricked', 'rep:brass-1'],
       res: 'You check your watch. You look at the garage door. You say, very casually, that the old man is due back any minute, and he\'s not going to be happy to find his fence melting his carpet. Brass\'s seams flicker. "...He\'s coming back?" "Any minute." Brass looks at the garage door. Brass has known Rick for forty years. Brass leaves.', next: 'c3_after' },
+    { t: 'Have the Tollkeepers invoice Brass for an unlicensed crossing.', a: 'talk', w: 3, req: 'axis:reach=allied | rep:tollkeepers>=4 | paid_toll', fx: ['axis:climax=tricked', '+syn_invoiced', 'rep:tollkeepers+1', 'rep:brass-2'],
+      res: 'You light a transit seal. A Tollkeeper clerk steps out of a cold portal into the burning hallway, unfolds a form, and addresses Brass by its full legal name, which is eleven syllables long and makes Brass flinch. "Unlicensed crossing," says the clerk. "Unpaid. Since four hundred and six years ago." Brass looks at the form. Brass looks at you. Brass leaves, to argue somewhere it has a lawyer.', next: 'c3_after' },
     { t: 'Fly out of here in the ship.', a: 'flee', w: 3, req: 'car_fixed', fx: ['axis:climax=fled', '+syn_fled', '+flew_away'],
       res: 'You hit the big red button marked GO (DON\'T). The ship tears through the garage roof in a shower of tiles and you are three hundred feet above the cul-de-sac before Brass reaches the garage. Behind you, the Syndicate ransacks the house. You circle, once, and fly off into the dawn.', next: 'c3_after' },
     { t: 'Run. They can have it.', a: 'flee', w: 3, fx: ['axis:climax=fled', '+syn_fled'],
@@ -305,6 +319,8 @@ FK.S({
       res: 'You bring up the map screen and show them the greyed-out points: hundreds of worlds. "Empty Smith houses," you say. Some of them might even be true. You pick one with a pool and a big yard, dial it in, open a portal. Jerry goes through first, delighted. The rest follow. Beth goes last. "If this is a lie," she says, "I will find my way back." You close the portal. It probably wasn\'t a lie. Probably.', next: 'c3_after' },
     { t: 'Ask the Caretaker to play the old family\'s voices. Scare them off.', a: 'gadget', w: 3, req: 'rep:caretaker>=2 & !caretaker_off & !caretaker_gone', fx: ['axis:climax=tricked', '+smi_scared', 'rep:caretaker+1'],
       res: 'Every speaker in the house starts talking at once: an old man\'s voice, sneering, a woman\'s voice, a boy\'s. "Get out of my house." "Who are these people?" "Dad, there\'s another us in the hall." The Wrong Smiths stand frozen. Then Jerry says, very quietly, "Oh, no. Oh no, they\'re still here." And they leave, fast, before their own dead family can walk out of the walls.', next: 'c3_after' },
+    { t: 'Walk them across the street to Dolores. She has a whole empty house.', a: 'talk', w: 3, req: 'rep:dolores>=3 | dolores_ally_final', fx: ['axis:climax=talked', '+smi_dolores', 'rep:dolores+1', 'rep:jerry+2'],
+      res: 'Dolores opens her door, looks at a whole family of Smiths who are not the Smiths, and sighs the sigh of a woman whose life has become very strange very late. "Four bedrooms," she says. "My husband\'s dead and my nephew only calls on Sundays. Wipe your feet." The other Beth lowers her rifle for the first time. That night the house across the street has every light on, and you can hear a Jerry laughing.', next: 'c3_after' },
     { t: 'Let them have it. Walk away. They need it more.', a: 'flee', w: 3, fx: ['axis:climax=fled', '+smi_left'],
       res: 'You look at them. A year in shelters. A world gone. You know exactly what that is. You pick up your bag. "It\'s yours," you say. Beth lowers the rifle, slowly, like she doesn\'t believe it. You walk out of the front door and down the path. Behind you, a Jerry starts crying, the good kind.', next: 'c3_after' },
     { t: 'Sell them to the people in grey. A Smith family is worth something to the Reclaimers.', a: 'betray', w: 3, req: 'item:ledger | deal_reclaimers | ninetytwo_spy', fx: ['axis:climax=soldout', '+sold_out_smiths', 'rep:jerry-5', 'rep:reclaimers+2'],
@@ -361,10 +377,39 @@ FK.S({
     { if: 'mystery>=2 & !house_burned', t: 'You know what the hum is now. You know who is on the other side of it. You know you could open it.' }
   ],
   choices: [
-    { t: 'Stay. Hold the house. It\'s home now.', a: 'neutral', req: '!house_burned', fx: ['axis:house=held'], next: '@ending' },
-    { t: 'Burn it down. End it.', a: 'force', req: '!house_burned & !axis:gun=returned', fx: ['axis:house=burned'], next: '@ending' },
-    { t: 'Walk away from the ashes.', a: 'flee', req: 'house_burned', fx: ['axis:house=burned'], next: '@ending' },
-    { t: 'Walk away. Leave it for whoever finds it next.', a: 'flee', req: '!house_burned', fx: ['axis:house=abandoned'], next: '@ending' },
-    { t: 'Go down to the basement and open the fold.', a: 'science', req: '!house_burned & mystery>=2 & (heater_understood | item:hinge)', fx: ['axis:house=opened'], next: '@ending' }
+    { t: 'Stay. Hold the house. It\'s home now.', a: 'neutral', req: '!house_burned', fx: ['axis:house=held'], next: 'c3_prisoners' },
+    { t: 'Burn it down. End it.', a: 'force', req: '!house_burned & !axis:gun=returned', fx: ['axis:house=burned'], next: 'c3_prisoners' },
+    { t: 'Walk away from the ashes.', a: 'flee', req: 'house_burned', fx: ['axis:house=burned'], next: 'c3_prisoners' },
+    { t: 'Walk away. Leave it for whoever finds it next.', a: 'flee', req: '!house_burned', fx: ['axis:house=abandoned'], next: 'c3_prisoners' },
+    { t: 'Go down to the basement and open the fold.', a: 'science', req: '!house_burned & mystery>=2 & (heater_understood | item:hinge)', fx: ['axis:house=opened'], next: 'c3_prisoners' }
+  ]
+});
+
+FK.S({
+  id: 'c3_prisoners', ch: 3, loc: 'garage', sub: true, title: 'The Ones You Kept',
+  text: [
+    { if: 'captives>=1 | axis:climax=captured', t: 'One more thing before you can call any of this over. The people you are holding.' },
+    { if: 'axis:climax=captured', t: 'Last night\'s visitors sit where you left them, tied, tired, watching you.' },
+    { if: 'cap:ninetytwo', t: 'Ninety-Two, behind the chain-link.' },
+    { if: 'cap:vell', t: 'Assessor Vell, folded neatly on its bucket.' },
+    { if: 'cap:knuckle', t: 'Knuckle, chained to the tow hook.' },
+    { if: 'cap:sporeling', t: 'The sporeling, glowing in its jar.' },
+    { if: 'cap:foreman', t: 'The Foreman, reading yesterday\'s newspaper.' },
+    { if: 'cap:dolores', t: 'Dolores Pike, upstairs, who has not spoken to you in days.' },
+    { if: 'cap:brass', t: 'Brass, frozen dull orange in your hallway, still negotiating.' },
+    { if: 'captives==0 & !axis:climax=captured', t: 'Nobody. You kept no one. You stand in the garage with your hands empty and you are, you find, glad.' }
+  ],
+  choices: [
+    { t: 'Let them all go.', a: 'neutral', req: 'captives>=1 | axis:climax=captured', fx: ['axis:prisoners=freed'],
+      res: 'You cut every tie and open every door. Some of them run. Some walk. One or two stop at the door and look back at you, trying to work out what kind of man does that. You aren\'t sure yourself.', next: '@ending' },
+    { t: 'Keep them. They\'re safer behind your fence than out there.', a: 'force', req: 'captives>=1 | axis:climax=captured', fx: ['axis:prisoners=kept'],
+      res: 'You tell yourself it\'s for their own good. You build a better cell. You buy a bigger pot for the stew. You become, by degrees, a jailer, and then a warden, and then something with no good name.', next: '@ending' },
+    { t: 'Offer every one of them a place here, if they want it.', a: 'talk', req: '(captives>=1 | axis:climax=captured) & (mouth>=3 | skill:command)', fx: ['axis:prisoners=recruited'],
+      res: 'You cut them loose and offer them coffee and a choice. Most leave. A few stay. By the end of the month you are running something in this garage that isn\'t a family and isn\'t a gang and isn\'t an army, and is a bit of all three.', next: '@ending' },
+    { t: 'Sell them to whoever pays best.', a: 'betray', req: '(captives>=1 | axis:climax=captured) & (brass_contact | rep:tollkeepers>=1 | item:ledger)', fx: ['axis:prisoners=sold', 'chits+5'],
+      res: 'A portal, a buyer, a bag of chits. They go in a line. Nobody says anything to you, and that is how you know you have become someone people don\'t bother saying anything to.', next: '@ending' },
+    { t: 'End it. No loose ends.', a: 'force', req: 'captives>=1 | axis:climax=captured', fx: ['axis:prisoners=executed'],
+      res: 'You do it in the yard, one at a time, with the door shut so the others can\'t see. It takes most of the morning. The yard has a lot of new earth in it now. You don\'t plant anything over it.', next: '@ending' },
+    { t: 'Close up the garage and go and see what\'s left of your life.', a: 'neutral', req: 'captives==0 & !axis:climax=captured', next: '@ending' }
   ]
 });

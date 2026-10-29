@@ -414,6 +414,7 @@ FK.S({
     'A crack from the backyard, a flash of green, and a very large splash.',
     'Somebody is in the pool, under the cover, thrashing. You haul the cover back and drag out a man: fortyish, soft, soaked, in a polo shirt with a sailboat on it and one shoe. He coughs up pool water and leaves.',
     '"Oh thank God," he says. "Oh thank God, I made it, it\'s still here." He looks at the house. Then at you. "Who are you? Why are you in my house? Where\'s Beth?"',
+    { if: 'posed_as_jerry', t: '"The shelter said a Jerry called from this address," he adds, dripping. "Said he had a house. I thought — I thought it might be me. Some other me. Is that weird? That\'s weird."' },
     'He looks like the man in the photo in the hall. Almost. His hair is parted on the other side. There\'s a scar on his chin the man in the photo doesn\'t have. He has a bracelet on his wrist with a number on it, the kind they give you at a shelter.'
   ],
   choices: [

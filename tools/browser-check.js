@@ -127,7 +127,8 @@ function ok(cond, msg) {
   await page.locator('.choices .choice', { hasText: 'Enter a code' }).click();
   ok(await page.locator('.puzzle .keypad').isVisible(), 'keypad puzzle renders');
   await shot('07-puzzle');
-  for (const d of '4160') await page.locator('.keypad .btn', { hasText: new RegExp('^' + d + '$') }).click();
+  const code = await page.evaluate(() => window.FK.DB.storylets.h_garage_door.choices.find(c => c.puzzle).puzzle.code);
+  for (const d of code) await page.locator('.keypad .btn', { hasText: new RegExp('^' + d + '$') }).click();
   await page.locator('.keypad >> text=OK').click();
   await page.waitForTimeout(700);
   ok(await page.evaluate(() => ['result', 'chapter'].includes(window.FKUI.state().screen.type)), 'solving the puzzle advances the story');

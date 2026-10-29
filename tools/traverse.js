@@ -195,8 +195,10 @@ const builds = [];
 for (const k of Object.keys(C.knacks)) for (const h of Object.keys(C.habits)) builds.push([k, h]);
 
 /* scorer(s, a, key) -> weight; higher = more likely */
-function walk(build, scorer, maxSteps) {
-  let s = FK.newGame(build[0], build[1]);
+/* A bank of mid-game hub states, so steered searches can start part-way. */
+const bank = [];
+function walk(build, scorer, maxSteps, start) {
+  let s = start ? FK.clone(start) : FK.newGame(build[0], build[1]);
   let checkpoint = FK.clone(s);
   let reloads = 0;
   const trail = [];
@@ -223,6 +225,9 @@ function walk(build, scorer, maxSteps) {
     const key = actionKey(s, a);
     trail.push(key);
     if (a.type === 'card' || (s.screen.type === 'hub')) checkpoint = FK.clone(s);
+    if (s.screen.type === 'hub' && rnd() < 0.03) {
+      if (bank.length < 4000) bank.push(FK.clone(s)); else bank[Math.floor(rnd() * bank.length)] = FK.clone(s);
+    }
     try { FK.act(s, a); } catch (e) { problem(`engine error after ${trail.slice(-6).join(' > ')}: ${e.message}`); return { s, end: null, trail }; }
     if (s.screen.type === 'story' && a.type !== 'choice') checkpoint = FK.clone(s);
   }
@@ -250,6 +255,198 @@ for (let round = 0; round < WALKS; round++) {
     const r = walk(b, (s, a, key) => novelty(s, a, key), MAXSTEPS);
     r.trail.forEach(k => seenKey.set(k, (seenKey.get(k) || 0) + 1));
   }
+}
+
+/* ---- steered search: for each scene or branch not yet reached, bias walks
+ * toward whatever its requirements need (two levels of prerequisites deep). */
+function posAtoms(src, out) {
+  out = out || new Set();
+  if (!src) return out;
+  (function walkN(n, neg) {
+    if (!n) return;
+    if (n.op === 'not') return walkN(n.a, !neg);
+    if (n.op === 'and' || n.op === 'or') { walkN(n.a, neg); walkN(n.b, neg); return; }
+    if (neg) return;
+    if (n.op === 'flag') out.add('flag:' + n.k);
+    else if (n.op === 'has' && ['item', 'up', 'skill', 'cap', 'dead', 'dest', 'seen'].includes(n.kind)) out.add(n.kind + ':' + n.k);
+    else if (n.op === 'axis') out.add('axis:' + n.k + '=' + n.v);
+    else if (n.op === 'cmp' && n.kind === 'var' && !FK.STATS.includes(n.k) && n.k !== 'turn' && (n.c === '>=' || n.c === '>' || n.c === '==')) out.add('num:' + n.k);
+    else if (n.op === 'cmp' && n.kind === 'rep' && (n.c === '>=' || n.c === '>')) out.add('rep+:' + n.k);
+    else if (n.op === 'cmp' && n.kind === 'rep') out.add('rep-:' + n.k);
+    else if (n.op === 'cmp' && n.kind === 'var' && FK.STATS.includes(n.k)) out.add('stat:' + n.k);
+  })(FK.parseReq(src), false);
+  return out;
+}
+function fxAtoms(list) {
+  const out = new Set();
+  (list || []).forEach(e => {
+    let m;
+    if ((m = /^\+(\w+)$/.exec(e))) out.add('flag:' + m[1]);
+    else if ((m = /^give:(\w+)$/.exec(e))) out.add('item:' + m[1]);
+    else if ((m = /^(up|cap|dest):(\w+)$/.exec(e))) out.add(m[1] + ':' + m[2]);
+    else if ((m = /^kill:(\w+)$/.exec(e))) out.add('dead:' + m[1]);
+    else if ((m = /^learn:(\w+)$/.exec(e))) out.add('skill:' + m[1]);
+    else if ((m = /^axis:(\w+=\w+)$/.exec(e))) out.add('axis:' + m[1]);
+    else if ((m = /^(\w+)\+\d+$/.exec(e)) && !FK.STATS.includes(m[1])) out.add('num:' + m[1]);
+    else if ((m = /^\+clue_/.exec(e))) out.add('num:mystery');
+    else if ((m = /^rep:(\w+)\+/.exec(e))) out.add('rep+:' + m[1]);
+    else if ((m = /^rep:(\w+)-/.exec(e))) out.add('rep-:' + m[1]);
+    else if ((m = /^(muscle|brains|mouth|sneak)\+/.exec(e))) out.add('stat:' + m[1]);
+    if (/^\+clue_/.test(e)) out.add('num:clues');
+    if (/^\+settled_/.test(e)) out.add('num:settled');
+    if (/^cap:/.test(e)) out.add('num:captives');
+  });
+  return out;
+}
+// who produces what: choice outcomes, storylet entry effects, skills, upgrades
+const producers = new Map();
+function addProd(atom, p) { if (!producers.has(atom)) producers.set(atom, []); producers.get(atom).push(p); }
+for (const id of DB.order) {
+  const sl = DB.storylets[id];
+  fxAtoms(sl.fx).forEach(a => addProd(a, { sid: id, enter: true }));
+  addProd('seen:' + id, { sid: id, enter: true });
+  sl.choices.forEach((c, i) => {
+    const outs = c.puzzle ? [['w', c.win], ['l', c.lose]] : c.out ? c.out.map((o, j) => [String(j), o]) : [['', c]];
+    outs.forEach(([k, o]) => {
+      const at = fxAtoms((c.fx || []).concat(o === c ? [] : (o.fx || [])));
+      at.forEach(a => addProd(a, { sid: id, i, k, req: c.req, oreq: o === c ? null : o.req }));
+    });
+  });
+}
+Object.values(DB.upgrades).forEach(u => addProd('up:' + u.id, { up: u.id, req: u.req }));
+Object.values(DB.skills).forEach(k => addProd('skill:' + k.id, { skill: k.id, req: k.req, after: k.after }));
+
+// how to get into a scene: its own requirement, plus whatever leads to it
+const avoidCache = new Map();
+function sceneNeeds(sid, out, depth, avoid) {
+  const sl = DB.storylets[sid];
+  posAtoms(sl.req, out);
+  if (sl.sub && depth < 4) {
+    for (const src of targetedBy[sid] || []) {
+      out.add('seen:' + src);
+      DB.storylets[src].choices.forEach(c => {
+        if (!c.out) return;
+        const j = c.out.findIndex(o => o.next === sid);
+        if (j < 0) return;
+        posAtoms(c.out[j].req, out);
+        // earlier branches of the same choice would win first: stay away from them
+        if (avoid) for (let e = 0; e < j; e++) posAtoms(c.out[e].req, avoid);
+      });
+      sceneNeeds(src, out, depth + 1, avoid);
+    }
+  }
+  return out;
+}
+function avoidFor(sid) {
+  if (!avoidCache.has(sid)) { const av = new Set(); sceneNeeds(sid, new Set(), 0, av); avoidCache.set(sid, av); }
+  return avoidCache.get(sid);
+}
+function expand(atoms, levels) {
+  const all = new Set(atoms);
+  let frontier = [...atoms];
+  for (let l = 0; l < levels; l++) {
+    const next = [];
+    for (const a of frontier) for (const p of producers.get(a) || []) {
+      const more = new Set();
+      if (p.sid) { posAtoms(p.req, more); posAtoms(p.oreq, more); sceneNeeds(p.sid, more, 0); }
+      if (p.req) posAtoms(p.req, more);
+      if (p.after) more.add('skill:' + p.after);
+      more.forEach(m => { if (!all.has(m)) { all.add(m); next.push(m); } });
+    }
+    frontier = next;
+  }
+  return all;
+}
+function steerTo(target) {
+  const [sid, rest] = target.split('#');
+  const need = sceneNeeds(sid, new Set(['seen:' + sid]), 0);
+  if (rest !== undefined) {
+    const [ci, k] = rest.split('.');
+    const c = DB.storylets[sid].choices[+ci];
+    posAtoms(c.req, need);
+    if (c.out && k !== undefined) posAtoms(c.out[+k].req, need);
+  }
+  const want = expand(need, 3);
+  const avoid = avoidFor(sid);
+  want.forEach(a => avoid.delete(a));
+  const cardFor = new Set();
+  need.forEach(a => (producers.get(a) || []).forEach(p => { if (p.sid) cardFor.add(p.sid); }));
+  return (s, a, key) => {
+    let w = novelty(s, a, key) * 0.3 + 0.1;
+    if (key === target || key.startsWith(target + '.')) return 1e6;
+    if (a.type === 'card' && (a.sid === sid || want.has('seen:' + a.sid))) w *= 30;
+    if (a.type === 'card' && cardFor.has(a.sid)) w *= 60;
+    if (a.type === 'learn' && want.has('skill:' + a.id)) w *= need.has('skill:' + a.id) ? 400 : 50;
+    if (a.type === 'build' && want.has('up:' + a.id)) w *= need.has('up:' + a.id) ? 400 : 50;
+    if (a.type === 'choice') {
+      const sl = DB.storylets[s.screen.sid], c = sl.choices[a.i], oc = FK.outcomeOf(s, c, a.win);
+      const got = fxAtoms((c.fx || []).concat(oc.o !== c ? oc.o.fx || [] : []));
+      const nx = oc.o.next !== undefined ? oc.o.next : c.next;
+      if (nx && want.has('seen:' + nx)) w *= 30;
+      let hit = 0, direct = 0;
+      got.forEach(g => { if (need.has(g) && !holds(s, g)) direct++; else if (want.has(g)) hit++; });
+      if (direct) w *= Math.pow(200, Math.min(direct, 2));
+      if (hit) w *= Math.pow(12, Math.min(hit, 3));
+      let bad = 0;
+      got.forEach(g => { if (avoid.has(g)) bad++; });
+      if (bad) w *= Math.pow(0.05, Math.min(bad, 2));
+      if (c.puzzle) w *= a.win ? 2 : 0.5;
+    }
+    if (a.type === 'wait') w *= 0.3;
+    return w;
+  };
+}
+function holds(s, atom) {
+  const [k, v] = [atom.slice(0, atom.indexOf(':')), atom.slice(atom.indexOf(':') + 1)];
+  switch (k) {
+    case 'flag': return !!s.flags[v];
+    case 'item': return s.items.includes(v);
+    case 'up': return !!s.upgrades[v];
+    case 'skill': return !!s.skills[v];
+    case 'cap': return !!s.captives[v];
+    case 'dead': return !!s.dead[v];
+    case 'dest': return !!s.dests[v];
+    case 'seen': return !!s.seen[v];
+    case 'axis': { const [a, b] = v.split('='); return s.axes[a] === b; }
+    case 'num': return FK.num(s, v) > 0;
+    case 'rep+': return (s.rep[v] || 0) > 0;
+    case 'rep-': return (s.rep[v] || 0) < 0;
+    case 'stat': return s.stats[v] >= 3;
+  }
+  return false;
+}
+function bestStart(target) {
+  if (!bank.length || rnd() < 0.25) return null;
+  const [sid, rest] = target.split('#');
+  const need = sceneNeeds(sid, new Set(), 0);
+  if (rest !== undefined) {
+    const [ci, k] = rest.split('.');
+    const c = DB.storylets[sid].choices[+ci];
+    posAtoms(c.req, need);
+    if (c.out && k !== undefined) posAtoms(c.out[+k].req, need);
+  }
+  const atoms = [...need];
+  const ch = FK.chapterOf(DB.storylets[sid])[0];
+  let best = [], bestScore = -1;
+  for (let i = 0; i < 400; i++) {
+    const st = bank[Math.floor(rnd() * bank.length)];
+    if (st.ch > ch) continue;
+    const sc = atoms.filter(a => holds(st, a)).length - 2 * [...avoidFor(sid)].filter(a => !need.has(a) && holds(st, a)).length;
+    if (sc > bestScore) { bestScore = sc; best = [st]; } else if (sc === bestScore) best.push(st);
+  }
+  return best.length ? pick(best) : null;
+}
+const STEER = QUICK ? 40 : 300;
+const missingBeforeSteer = [...allOutcomes].filter(k => !cov.c.has(k)).length + DB.order.filter(id => !cov.s.has(id)).length;
+for (const id of DB.order) {
+  for (let t = 0; t < STEER && !cov.s.has(id); t++) { walks++; walk(pick(builds), steerTo(id), MAXSTEPS, bestStart(id)); }
+}
+for (const k of allOutcomes) {
+  for (let t = 0; t < STEER && !cov.c.has(k); t++) { walks++; walk(pick(builds), steerTo(k), MAXSTEPS, bestStart(k)); }
+}
+// last resort for the rarest branches: many more steered tries
+for (const k of allOutcomes) {
+  for (let t = 0; t < STEER * 8 && !cov.c.has(k); t++) { walks++; walk(pick(builds), steerTo(k), MAXSTEPS, bestStart(k)); }
 }
 
 /* ---- targeted ending search: steer walks toward each missing core ending */
@@ -328,7 +525,7 @@ console.log('----------------------------');
 console.log(`content     ${DB.order.length} storylets, ${totalChoices} choices, ${allOutcomes.size} distinct outcomes`);
 console.log(`walks       ${walks} playthroughs, ${steps} steps, ${((Date.now() - t0) / 1000).toFixed(1)}s, ${builds.length} builds`);
 console.log(`storylets   ${cov.s.size}/${DB.order.length} reached`);
-console.log(`outcomes    ${cov.c.size}/${allOutcomes.size} reached`);
+console.log(`outcomes    ${cov.c.size}/${allOutcomes.size} reached (${missingBeforeSteer} scenes/branches needed steering)`);
 console.log(`endings     ${cov.ending.size}/${allEndings.length} core endings reached (${allEndings.length - missingAfterRandom} by free play, rest by steered search)`);
 console.log(`variants    ${cov.combos.size} distinct ending texts seen`);
 console.log(`identities  ${cov.identity.size}/${Object.keys(E.identities).length}`);

@@ -2,11 +2,12 @@
 
 **Use when** designing, writing, building or testing the Rick & Morty choice-story RPG (a drifter who takes over Rick's abandoned house and garage), or deciding anything about its story, systems or scope.
 
-A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty universe. Private repository `Ross-ai-lab/finders-keepers`, checked out at `Ross/Github/Finders Keepers/`. Every ruling below is his, from the 2026-10-29 questionnaire and chat. Status: design settled, nothing built yet.
+A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty universe. Private repository `Ross-ai-lab/finders-keepers`, checked out at `Ross/Github/Finders Keepers/`. Every ruling below is his, from the 2026-10-29 questionnaire and chat. Status: **first playable slice built** (see [Build status](#build-status)).
 
 ## Spoilers
 
 - **`the-plot-lives-only-in-the-story-bible`** — The plot, twists and what really happened to the Smiths live in ONE file, `SPOILERS - story bible.md` in this folder, which he does not open. Never write plot into chat, this README, file names he sees, or a reply. This README holds design rules only.
+- **`story-text-lives-in-a-spoiler-folder`** — The scene text itself lives in `src/story-SPOILERS/`. The folder name is the warning: don't open it before playing. Inside the built game the story is stored encoded, so opening the HTML in a text editor doesn't spoil it at a glance.
 - **`never-confirm-his-guesses`** — When he floats a plot idea ("Rick comes back and kills you"), note it in the story bible and neither confirm nor deny it in chat; a yes or no spoils it either way.
 
 ## Premise and character
@@ -63,6 +64,71 @@ The raw answers behind the rules above, kept here because they existed only in c
 - **`this-repo-stands-alone`** — In a cloud checkout only this repo exists. The `../../../Knowledge/...` links point into the private workspace repo `Ross-ai-lab/ai-workspace` and are dead here; every rule they back is already stated in full above.
 - **`no-local-tools-in-the-cloud`** — The workspace's local tools (`just`, Stable Audio music, the screenshot wall, vendored binaries) do not exist in a cloud session. Make sound with procedural WebAudio in the page, and test with Node plus a headless browser.
 - **`push-every-finished-piece`** — Commit and push to `main` after each finished piece, so the local checkout at `Ross/Github/Finders Keepers/` can pull it.
+
+## Build status
+
+**Playable now:** `Finders Keepers.html` at the repo root. One self-contained offline file: double-click it, it opens in any modern browser, no internet needed. It is **one slice**, as `ship-one-wide-slice-first` asks: the house, the garage, three portal destinations, three chapters, and a full set of endings for the slice. Later chapters are not written yet.
+
+| | In this slice |
+|---|---|
+| Scenes (storylets) | 117 |
+| Choices | 497, with 531 distinct outcomes |
+| Endings | 579: 570 core endings built from four independent axes, plus 9 early exits. Every ending also has an epilogue assembled from what you did, so the same core ending reads differently run to run (the route checker saw over 2,400 distinct ending texts). |
+| Builds | 16 starting builds (4 knacks × 4 road habits) that decide which solutions you see |
+| Systems | inventory grid, portal map, 4 puzzle types, home base with 6 upgrades, 4 stats, a 16-skill tree in 4 branches, reputation with "X will remember that" notes, prisoners, companions, an exposure meter (how close someone is to walking in) |
+| Length | a full run is roughly 60–90 minutes of reading (about 13,000 words and 70 choices); an early exit can come much sooner. The whole slice is about 43,000 words. |
+| Visuals | drawn in code on a canvas: moving rain, garage sparks, snow, fire and embers, drifting spore light, portal glow, the portal map, a base diagram, branch flowcharts |
+| Sound | made live in the page with WebAudio: ambient beds per place, a slow generative score, a heartbeat when exposure is high, thunder, sparks and effect sounds. Starts on first click; toggle in the top bar. |
+
+Not done yet: chapters after the slice; named voice acting or recorded music (sound is all procedural); a dev page with live reload (edit the source, then rebuild).
+
+## How the engine works
+
+A custom storylet engine (`src/engine/engine.js`), not ink. It is plain JavaScript with no page code in it, so the same engine runs in the browser and in Node for the route checker.
+
+- **Storylets, not a tree.** Each scene declares where it can happen (a place and chapter) and a requirement written as a small expression over state, e.g. `muscle>=3 & (item:crowbar | skill:brawler) & !alarm`. At a place, the hub shows every scene whose requirement is met, so runs differ in order and mix. Some scenes are *forced*: they fire by themselves when their requirement becomes true (a knock at the door when exposure gets high).
+- **Every choice is gated by state too.** Choices carry an approach (force, science, gadget, talk, sneak, flee, betray) and a requirement. Choices your build can't use are hidden, and the page tells you how many approaches your build can't see. A choice can have conditional outcomes (the same action goes differently depending on your stats or history), or be a puzzle with a win and a lose outcome.
+- **Effects** are short strings: `+flag`, `heat+2`, `give:crowbar`, `rep:someone-1` (shows "X will remember that"), `cap:someone` (take a prisoner), `kill:someone`, `axis:gun=kept`, `learn:skill`, `note:...`.
+- **Endings multiply.** The ending is assembled from four independent axes: how the final night went (six outcomes), who you became (five identities, computed from which approaches you used most over the whole run), what you did with the portal gun (five) and the house (four). Each axis contributes its own paragraphs; then dozens of epilogue paragraphs switch on and off from flags, reputations, prisoners and the fate of each place.
+- **Discovery is tracked across runs** in the browser. After each chapter the page draws a flowchart of that chapter's scenes and branches: found ones show their text, unfound ones show `???`, with the percentage of the chapter and of the whole story discovered.
+- **Saves.** Autosave at the start of every scene and on every hub; three manual slots. Death sends you back to the autosave at the start of the scene you died in.
+
+## Files
+
+```
+Finders Keepers.html        the built game (open this)
+SPOILERS - story bible.md   the plot (don't open)
+src/engine/engine.js        storylet engine: state, requirements, effects, endings
+src/story-SPOILERS/         all scene text and world data (don't open before playing)
+src/ui/                     page shell, style, canvas visuals, WebAudio sound, puzzles, flowchart, interface
+tools/build.js              bundles everything into the one HTML file
+tools/traverse.js           route checker (Node)
+tools/browser-check.js      headless playtest (Playwright + Chromium)
+```
+
+## How to run the checks
+
+Needs Node 18 or newer. The browser check also needs Playwright with Chromium (`npm i -D playwright && npx playwright install chromium` on a normal machine; it is preinstalled in the cloud sessions).
+
+```bash
+node tools/build.js
+```
+
+Rebuilds `Finders Keepers.html` from `src/`. Run it after any edit.
+
+```bash
+node tools/traverse.js
+```
+
+The route checker, about two minutes. It first checks statically that every requirement parses and that every flag, item, skill, upgrade, prisoner, place and target a scene needs is actually produced somewhere. Then it plays thousands of runs across all 16 builds (deaths reload, like in the game), steers extra runs toward anything not yet reached (and away from things that would send the story elsewhere), and finally steers runs toward every one of the 579 endings. It fails, listing ids only, if any scene, choice outcome, travel route, upgrade, skill, chapter or ending is unreachable, or if any run gets stuck with nothing to do. Use `--quick` for a faster, less thorough pass and `--seed=N` to vary the runs.
+
+```bash
+node tools/browser-check.js
+```
+
+Opens the built file in headless Chromium and plays it through the real interface: title, new game, ~70 steps of play, autosave, page reload and Continue, a manual save slot, every panel, a death and reload, a puzzle, the chapter flowchart, an ending, and a phone-width layout check. Fails on any console or page error. Add `--shots=DIR` to save screenshots.
+
+`npm test` runs all three in order.
 
 ## Sources
 

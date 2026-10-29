@@ -84,11 +84,11 @@ Hinge memory, give "knows"):
 - `clue_food` — food disappears; the fridge is restocked with Jerry's favourite yogurt.
 - `clue_notes` — Morty's notes in a cereal box ("please don't sit in grandpa's chair").
 - `clue_photo` — the family photo in the hall changes slightly between visits.
-- `clue_anchor` — the "water heater" in the basement hums a chord and has no pipes.
-- `clue_quitclaim` — in the garage: Rick's signed interdimensional quitclaim deed.
-- `clue_deed` — the Reclaimers' Deed Engine shows the house's claim moving to *you*.
+- `clue_heater` — the "water heater" in the basement hums a chord and has no pipes.
+- `clue_paper` — in the garage: Rick's signed interdimensional quitclaim deed.
+- `clue_ledger` — the Reclaimers' Deed Engine shows the house's claim moving to *you*.
 - `clue_hinge` — the Bloom's stored memory of the last dinner, inside the house, in grey.
-- `clue_caretaker` — the Caretaker slips and says "he says" instead of "I say".
+- `clue_voice` — the Caretaker slips and says "he says" instead of "I say".
 
 Mystery level is computed (0 none, 1 suspicious with 2+ clues, 2 knows when the
 Anchor or Hinge clue is held plus at least 2 more). Every ending stays reachable at
@@ -182,53 +182,59 @@ trick, flee, betray — handing over the gun or the house or the truth), and a c
 
 ---
 
-## 5. Ending matrix (slice)
+## 5. Ending matrix (slice) — as built
 
-Core ending = **Identity × Gun × House**.
+Core ending = **Climax × Identity × Gun × House** (four independent axes), plus an
+epilogue assembled from ~70 conditional paragraphs. Early exits stand alone.
 
-- **Identity** (from the approach tally over the whole run; the climax choice weighs triple):
-  - `brute` — force dominant. "The Landlord."
-  - `successor` — science/gadget dominant. "The New Rick."
-  - `fixer` — talk dominant. "The Fixer."
-  - `ghost` — sneak/flee dominant. "The Ghost in the House."
-  - `turncoat` — betrayal dominant. "The Turncoat."
-- **Gun**: `kept`, `sold` (needs Cinderfall contact), `destroyed`, `surrendered`
-  (handed to the visitors), `returned` (left at the Anchor for the Fold; needs mystery ≥ 2).
-- **House**: `held`, `burned`, `abandoned`, `opened` (you open the Fold; needs mystery ≥ 2
-  and the Hinge or the Anchor understood).
-- Invalid: `returned` + `burned` (you can't give the gun back to a family you just burned
-  the anchor of). 5 × 5 × 4 − 5 = **95 core endings**.
+- **Climax** (how the night of chapter 3 went; set by the standoff choice, weighted ×3 in the identity tally):
+  `killed`, `captured`, `talked`, `tricked`, `fled`, `soldout` (gave the visitors something
+  that wasn't yours: the family, Ninety-Two, Jerry, the house, the gun).
+- **Identity** (dominant approach over the whole run): `brute` (The Landlord), `successor`
+  (The New Rick), `fixer` (The Fixer), `ghost` (The Ghost in the House), `turncoat` (The Turncoat; betrayal counts double).
+- **Gun**: `kept`, `sold` (needs a Cinderfall contact), `destroyed`, `given` (to Ninety-Two,
+  Dolores, the other Beth, the Noodle Rick, a FREE box — or to the visitors in the climax),
+  `returned` (left on the Anchor for the Fold; needs mystery 2).
+- **House**: `held`, `burned`, `abandoned` (strike plate back in the sandwich bag: you do to the
+  next squatter what was done to you), `opened` (the Fold opens; the Smiths are in the kitchen;
+  Rick's first line depends on identity; chapter 4 hook).
+- Invalid: gun `returned` + house `burned`. 6 × 5 × 5 × 4 − 30 = **570 core endings**.
+- **Early exits (9)**: `walkaway` (leave the house), `lost` (fire the gun at random),
+  `arrested` (give yourself up to the detectives), `reclaimer` (join the grey camp as #201),
+  `tollclerk` (junior assessor at the east booth), `cinderlord` (Brass & Grady), `bloom`
+  (let the Drift keep you), `jar` (shrink into the microverse battery as its god),
+  `button` (hold the blue button: swap into a universe where Hollis owns the house).
+- Total: **579 endings**, each with epilogue variation (prisoners' fate, companions, worlds,
+  kills, mystery level, Dolores, Ninety-Two, Caretaker, Brass, Jerry, Biscuit the dog, the jar city…).
 
-Epilogue axes (change paragraphs, not the title):
+### Who walks in (chapter 3 visitor routing, first match wins)
 
-- **Visitor**: reclaimers / tollkeepers / syndicate / bloom / wrongsmiths.
-- **Climax outcome**: killed / captured / talked / tricked / fled / sold-out.
-- **Mystery**: 0 / 1 / 2.
-- **Companions**: Caretaker (friend/tool/gone), Dolores (ally/hostile/unaware/hurt),
-  Ninety-Two (recruit/captive/dead/free/unmet), Brass (partner/enemy/dead/unmet).
-- **Destinations**: each world friendly / hostile / ruined / untouched.
+1. **Wrong Smiths** — `jerry_invited`, or Hollis posed as Jerry on the shelter call and sheltered Jerry.
+2. **The Bloom** — Drift burned, or harvested with Bloom rep ≤ −4, or Bloom rep ≤ −5.
+3. **Cinder Syndicate / Brass** — Cinderfall cheated or burned, Brass rep ≤ −4, or Brass robbed.
+4. **Tollkeepers** — the gate ruined, Tollkeeper rep ≤ −4, or Vell killed.
+5. **A Rick** (the Noodle Rick) — if Hollis robbed him or sold him to the Syndicate. He sits in the
+   recliner and claims the house by "finders keepers" himself; he can be poisoned with the skull bottle,
+   trapped in Rick's own chair (it has Rick-proof restraints), talked down with the truth, sold to the
+   Reclaimers by Ninety-Two, or sold the claim.
+6. **Police** — officer assaulted, detectives portaled away, officer rep ≤ −3, or heat ≥ 9 with the
+   electric bill unpaid. The truth (mystery 2: hand on the heater) makes the detective write it up as a gas leak.
+7. **Reclaimers** — default. Leader is the Foreman, or a young successor if he was killed/captured/sold.
 
-### What each gun/house result means (truth layer)
+Ally options in standoffs: Vell's audit, Biscuit the dog, Brass as partner (buys the Reclaimers
+as labour, or your debt), Bloom spores (Tollkeepers forget), Tollkeepers invoice Brass, Dolores takes
+in the Wrong Smiths, Dolores alibis you to the police, the Caretaker voices the family, Ninety-Two
+speaks for you or sells the Rick, Knuckle fights beside you.
 
-- **Kept + held**: Hollis keeps being the decoy. Rick, inside the Fold, keeps quiet. The
-  epilogue's last line is a note on the fridge in Morty's handwriting: "thank you (sorry)".
-- **Opened**: the Fold opens; the Smiths are suddenly *in the kitchen*. Rick's first line
-  depends on identity. Slice cliffhanger; Chapter 4 (future) starts there.
-- **Returned**: the gun is gone in the morning; on the workbench is a new, cheaper gun
-  and a note in Rick's handwriting: "Finders keepers. Keep finding."
-- **Burned**: the Anchor's hum stops. Nobody knows what that means yet. (Future chapters:
-  the Fold survives, barely, and the Smiths are angry.)
-- **Surrendered** to the Reclaimers: the Deed Engine tracks the gun's claim back to Rick;
-  future chapter hook. To others: the gun becomes their problem.
-- **Sold**: Brass's buyers start using it; a future chapter has Hollis meeting the results.
-
----
+After the climax: gun decision → house decision → **prisoners** (freed / kept / recruited /
+sold / executed) if anyone is held → ending.
 
 ## 6. Ross's guesses log
 
 Record his plot guesses here, unconfirmed and undenied in chat.
 
 - (none yet)
+
 
 ---
 
@@ -275,3 +281,20 @@ plan; ids are kept non-descriptive in visible places.
 ### Chapter 3 (climax) — approx. 20 storylets
 - Visitor arrival ×5, standoff ×5 (each with 5–7 visible-by-build options), the cost,
   aftermath in the garage (gun + house choices), the ending.
+
+### Added in the width pass
+
+- House (ch 1–2): bathroom cabinet (wet toothbrush; the skull bottle that later poisons a Rick),
+  the mail pile (metal "claim transfer" notice; paying the electric bill keeps police away),
+  the 3 a.m. house phone (the Shelter for Displaced Jerrys — posing as Jerry invites the Wrong Smiths),
+  the pizza for "Jerry" every Thursday, Biscuit the neighbour's dog (barks at the heater; can become a guard).
+- Garage (ch 2): the jars (a microverse battery city that worships Hollis; exit `jar`), the blue button
+  (moves the house three feet, swaps Hollis with a lab-coat Hollis for a second, or turns him blue; held
+  down: exit `button`), a visit from the Noodle Rick (how to hide a family; how to open it).
+- Companions: Ninety-Two and Jerry at one table (a household), Biscuit.
+- Worlds: the Tollkeepers' Lost Property Office (47 seizures from Rick; claim them with the quitclaim and
+  inherit his tolls), the Temple of the Cold Flame in Cinderfall (blessing, give or steal blue fire),
+  the Mirror Pool in the Drift (learn from five alternate Hollises — one per identity).
+- Puzzles: garage keypad (code is the dinner date 6/14 backwards: 4160), basement fuse box (lights-out),
+  scrambled coordinates dial (TRIANGLE, FISH, EYE — shown on the map screen first), the Hinge vault
+  (seating order from the photo: FLASK Rick, HORSE Beth, TIE Jerry, PHONE Summer, PENCIL Morty).
