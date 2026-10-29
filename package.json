@@ -1,0 +1,13 @@
+{
+  "name": "finders-keepers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Text-first choice RPG, first playable slice",
+  "scripts": {
+    "build": "node tools/build.js",
+    "check": "node tools/traverse.js",
+    "check:quick": "node tools/traverse.js --quick",
+    "test:browser": "node tools/browser-check.js",
+    "test": "node tools/build.js && node tools/traverse.js && node tools/browser-check.js"
+  }
+}
