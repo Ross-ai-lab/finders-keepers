@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finders Keepers</title>
+<meta name="description" content="A text-first choice RPG. A drifter, an empty house, a garage that should not exist.">
+<style>
+/*{{STYLE}}*/
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div id="vignette" aria-hidden="true"></div>
+<div id="app">
+  <header id="topbar" hidden>
+    <div class="tb-left">
+      <div id="tb-chapter" class="tb-chapter"></div>
+      <div id="tb-loc" class="tb-loc"></div>
+    </div>
+    <div id="tb-stats" class="tb-stats"></div>
+    <nav id="tb-nav" class="tb-nav" aria-label="Game menus"></nav>
+  </header>
+  <main id="stage">
+    <article id="page" aria-live="polite"></article>
+  </main>
+  <div id="toasts" aria-live="polite"></div>
+  <div id="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <h2 id="modal-title"></h2>
+        <button class="btn ghost" id="modal-close" aria-label="Close">✕</button>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+</div>
+<script>
+/*{{SCRIPTS}}*/
+</script>
+</body>
+</html>

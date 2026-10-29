@@ -94,9 +94,9 @@ FK.S({
     'The third label is scrambled, the letters crawling over each other. The coordinates under it cycle through junk. The symbols in the corner of the screen show the last good readout: a TRIANGLE, then a symbol like a FISH, then an EYE. Someone did this on purpose, too.'
   ],
   choices: [
-    { t: 'Copy the two clean coordinates into the gun\'s memory.', a: 'science', fx: ['dest:reach', 'dest:cinder'],
+    { t: 'Copy the two clean coordinates into the gun\'s memory, and note the scrambled one\'s last readout.', a: 'science', fx: ['dest:reach', 'dest:cinder', '+map_readout', 'note:Map screen, last good readout for the scrambled world: TRIANGLE, then FISH, then EYE.'],
       res: 'The gun\'s dial accepts them with a click each. PALLID REACH. CINDERFALL. Two places that are not this place. Two places where nobody is looking for you, or where somebody very much is. You realise your hand is shaking, and that it is not entirely fear.', next: 'hub' },
-    { t: 'Ask the screen, out loud, where the family went.', a: 'talk', fx: ['dest:reach', 'dest:cinder', '+asked_map'],
+    { t: 'Ask the screen, out loud, where the family went.', a: 'talk', fx: ['dest:reach', 'dest:cinder', '+asked_map', '+map_readout', 'note:Map screen, last good readout for the scrambled world: TRIANGLE, then FISH, then EYE.'],
       res: 'You feel stupid. The screen does not answer. But it zooms, slowly, on its own, out from the three bright points to the whole map: hundreds of greyed-out worlds. Then it zooms all the way in, to a single tiny point labelled HOME. It sits there, pulsing. Then it zooms back out. You copy down the two clean coordinates with a pencil, and don\'t look at HOME again.', next: 'hub' }
   ]
 });
@@ -105,7 +105,9 @@ FK.S({
   id: 'g_calibrate', ch: 2, loc: 'garage', title: 'The Scrambled Coordinates', teaser: 'Unscramble the third destination.', once: false,
   req: 'seen:g_map & !dest:drift',
   text: [
-    'The third destination crawls on the screen, its name a smear of letters, its coordinates a stream of noise. In the corner, the three symbols of the last good readout: TRIANGLE, FISH, EYE.',
+    'The third destination crawls on the screen, its name a smear of letters, its coordinates a stream of noise. The corner where the last good readout was is static now.',
+    { if: 'map_readout', t: 'You wrote the last good readout down when you first looked at the map. It\'s in your journal.' },
+    { if: '!map_readout', t: 'You didn\'t catch the last good readout when the screen still showed it. You\'d be guessing.' },
     'Under the screen, three brass rings with symbols etched around them, the kind of dial safes had before safes had keypads. Six symbols on each ring.',
     'Whoever scrambled this wanted it hard to reach. Not impossible. Hard.'
   ],

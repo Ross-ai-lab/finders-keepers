@@ -264,6 +264,7 @@ function choiceAxes(s, c, win) {
 function targeted(target) {
   const parts = target.split('/');
   const want = parts[0] === 'exit' ? { exit: parts[1] } : { id: parts[0], gun: parts[1], house: parts[2], climax: parts[3] };
+  const needsMystery = want.gun === 'returned' || want.house === 'opened';
   return (s, a, key) => {
     let w = novelty(s, a, key) * 0.5 + 0.2;
     if (a.type === 'choice') {
@@ -278,7 +279,13 @@ function targeted(target) {
         if (k === 'gun' || k === 'house' || k === 'climax') w *= v === want[k] ? 400 : 0.002;
       }
       if (c.puzzle) w *= a.win ? 1.5 : 0.7;
+      if (needsMystery && FK.mystery(s) < 2) {
+        const oc = FK.outcomeOf(s, c, a.win);
+        const fx = (c.fx || []).concat(oc.o !== c ? oc.o.fx || [] : []);
+        if (fx.some(e => /^\+clue_|^\+heater_understood|^give:hinge/.test(e))) w *= 8;
+      }
     }
+    if (a.type === 'card' && needsMystery && FK.mystery(s) < 2) w *= 1.5;
     if (a.type === 'wait') w *= 0.2;
     return w;
   };
