@@ -37,6 +37,33 @@ A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty un
 - **`ship-one-wide-slice-first`** — First build: the house, the garage and three portal destinations with a full set of chapter endings, playable on its own. Say plainly that it is one slice ([profile](../../../Knowledge/ross-rustam-profile.md) game shelf).
 - **`validate-every-route-by-traversal`** — Check every storylet requirement, target and ending with an out-of-page traversal script before handing it over ([reports.md](../../../Knowledge/reports.md) `validate-a-branching-narrative-by-real-traversal`).
 
+## His questionnaire answers (2026-10-29)
+
+The raw answers behind the rules above, kept here because they existed only in chat. Skipped questions are left out.
+
+| Topic | His answer |
+|---|---|
+| Feeling at the end | Clever (outsmarted it) and powerful (became strong) |
+| Mood | Middle of hopeful-to-bleak; fear level "doesn't matter" within the no-gore-horror rule |
+| Zombies | Fine either way |
+| Violence | Described plainly |
+| Humour | Dry jokes now and then |
+| Stakes | His own life and the people close to him |
+| Story shape | A home base he keeps returning to |
+| Ending | Many endings, all decided by him |
+| Length | One complete story (about 2 to 3 hours for one run) |
+| Replay | Yes, but only if the plot is genuinely wide: "I care about WIDENESS more than ANYTHING ELSE" |
+| Loved | Baldur's Gate 3, Undertale |
+| Liked | Detroit: Become Human |
+| Why The Walking Dead worked | The characters, hard choices, choices that came back later, survival tension |
+| Why he quit story games | Choices didn't matter; boring characters |
+
+## Working from a cloud session
+
+- **`this-repo-stands-alone`** — In a cloud checkout only this repo exists. The `../../../Knowledge/...` links point into the private workspace repo `Ross-ai-lab/ai-workspace` and are dead here; every rule they back is already stated in full above.
+- **`no-local-tools-in-the-cloud`** — The workspace's local tools (`just`, Stable Audio music, the screenshot wall, vendored binaries) do not exist in a cloud session. Make sound with procedural WebAudio in the page, and test with Node plus a headless browser.
+- **`push-every-finished-piece`** — Commit and push to `main` after each finished piece, so the local checkout at `Ross/Github/Finders Keepers/` can pull it.
+
 ## Sources
 
 - [HTML Reports/Story Game Questionnaire.html](../../../HTML%20Reports/Story%20Game%20Questionnaire.html) — the questionnaire behind these rulings.
