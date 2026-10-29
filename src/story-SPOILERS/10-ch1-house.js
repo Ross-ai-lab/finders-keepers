@@ -127,12 +127,16 @@ FK.S({
   ],
   choices: [
     { t: 'Sit in the old man\'s chair.', a: 'force', fx: ['+sat_chair', 'rep:caretaker-1', 'hp+1'],
-      res: 'It is, without question, the most comfortable chair you have ever sat in. Something in it has been engineered past what a chair should be. You sink. You sigh. The smoke detector stops blinking and holds a steady, offended red, and a speaker you didn\'t know was there clears its throat, a crackle of static, and then thinks better of it.', next: 'hub' },
+      res: [
+        'It is, without question, the most comfortable chair you have ever sat in. Something in it has been engineered past what a chair should be. You sink. You sigh. Under the left arm your fingers find a lever you decide not to pull.',
+        { if: '!caretaker_off', t: 'The smoke detector stops blinking and holds a steady, offended red, and a speaker you didn\'t know was there clears its throat, a crackle of static, and then thinks better of it.' },
+        { if: 'caretaker_off', t: 'The dark smoke detector says nothing at all. Somehow that is worse.' }
+      ], next: 'hub' },
     { t: 'Dig the metal thing out from under the cushion.', a: 'sneak', fx: ['give:flask'],
       res: 'A steel flask, dented, monogrammed with an R. You unscrew the cap and the air above it wobbles like heat over a road. It smells like jet fuel and pine needles. You do not drink it. You keep it.', next: 'hub' },
     { t: 'Turn on the TV for company.', a: 'neutral', fx: ['heat+1', '+tv_on'],
       res: 'The TV comes on to a channel you\'ve never seen. A man with too many arms is selling a knife that cuts "the concept of bread". You flick through. Local news: a mention of a police appeal for "information about the Smith family of Lindell Court, believed to be travelling." Your street. The neighbour across the road will have heard the TV through the window. You turn it down, then off.', next: 'hub' },
-    { t: 'Stand under the smoke detector and look straight at it.', a: 'talk', fx: ['+caretaker_awake'],
+    { t: 'Stand under the smoke detector and look straight at it.', a: 'talk', req: '!caretaker_off', fx: ['+caretaker_awake'],
       res: '"I know you\'re watching," you say. The light blinks. "I\'m not going to break anything." The light blinks. "I\'m just staying till the rain stops." A long pause. Then a speaker crackles, and a dry, offended voice says: "It is going to rain for a very long time." Then the light goes back to blinking like nothing happened.', next: 'hub' }
   ]
 });
@@ -344,7 +348,7 @@ FK.S({
 });
 
 FK.S({
-  id: 'e_caretaker', ch: 1, loc: 'house', forced: true, prio: 4, title: 'The Voice in the Smoke Detector',
+  id: 'e_caretaker', ch: [1, 2], loc: 'house', forced: true, prio: 4, title: 'The Voice in the Smoke Detector',
   req: '(caretaker_awake | turn>=5) & !caretaker_off',
   text: [
     'The smoke detector stops blinking. The speaker in it, which should be the size of a coin, produces a voice that fills the room like it\'s coming from the walls.',
@@ -368,7 +372,7 @@ FK.S({
 });
 
 FK.S({
-  id: 'e_dolores', ch: 1, loc: 'house', forced: true, prio: 3, title: 'A Knock at the Door',
+  id: 'e_dolores', ch: [1, 2], loc: 'house', forced: true, prio: 3, title: 'A Knock at the Door',
   req: 'turn>=4 & !dolores_met',
   text: [
     'Three knocks. Not police knocks: precise, measured, a person who has thought about knocking.',
@@ -423,7 +427,7 @@ FK.S({
 FK.death('officer', 'You go for him in the dark and he is faster than you, and better trained, and very scared. The taser takes your legs out. Your head takes the corner of the hall table on the way down. The last thing you see is the family photo on the wall, the old man looking down at you, unimpressed.');
 
 FK.S({
-  id: 'e_scout', ch: 1, loc: 'house', forced: true, prio: 2, title: 'Someone at the Garage',
+  id: 'e_scout', ch: [1, 2], loc: 'house', forced: true, prio: 2, title: 'Someone at the Garage',
   req: 'turn>=7',
   text: [
     'A blue-white flash in the backyard, like lightning that didn\'t want to make a fuss, and the WHUMP you have heard at night, but small.',
