@@ -233,7 +233,7 @@ sold / executed) if anyone is held → ending.
 
 Record his plot guesses here, unconfirmed and undenied in chat.
 
-- (none yet)
+- 2026-10-30 (after strong hints, before playing): "Rick did it on purpose, it is his experiment. I come in his house and learn his stuff. He wants that."
 
 
 ---
