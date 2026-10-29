@@ -1,8 +1,8 @@
-# Squatter's Rights — Rick & Morty Text RPG
+# Finders Keepers — Rick & Morty Text RPG
 
 **Use when** designing, writing, building or testing the Rick & Morty choice-story RPG (a drifter who takes over Rick's abandoned house and garage), or deciding anything about its story, systems or scope.
 
-A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty universe. Private repository `Ross-ai-lab/squatters-rights`, checked out at `Ross/Github/Squatters Rights/`. Every ruling below is his, from the 2026-10-29 questionnaire and chat. Status: design settled, nothing built yet.
+A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty universe. Private repository `Ross-ai-lab/finders-keepers`, checked out at `Ross/Github/Finders Keepers/`. Every ruling below is his, from the 2026-10-29 questionnaire and chat. Status: design settled, nothing built yet.
 
 ## Spoilers
 
