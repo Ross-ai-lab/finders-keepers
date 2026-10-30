@@ -234,7 +234,7 @@ sold / executed) if anyone is held → ending.
 Record his plot guesses here, unconfirmed and undenied in chat.
 
 - 2026-10-30 (after strong hints, before playing): "Rick did it on purpose, it is his experiment. I come in his house and learn his stuff. He wants that."
-- 2026-10-30: at his explicit request he was then told the whole of section 1 (the Reclaimers, the Fold, the decoy, the Caretaker, the Hinge). Treat the core truth as known to him; puzzle answers, visitor routing and the ending matrix were not shared.
+- 2026-10-30: at his explicit request he was then told the whole of section 1 (the Reclaimers, the Fold, the decoy, the Caretaker, the Hinge). Treat the core truth as known to him. He then asked for and got, in general terms, the chapter 3 visitor routing and the ending axes and early exits. Puzzle answers were not shared.
 
 
 ---
