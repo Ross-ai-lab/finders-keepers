@@ -16,7 +16,7 @@ A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty un
 - **`play-the-drifter`** — The player is a fixed character with a name and past: a drifter who squats in empty houses and picks the wrong one. Ordinary at the start, alone, no romance, and free to become a real villain.
 - **`other-universes-may-visit`** — Other universes' Ricks, Mortys and Smiths may appear.
 - **`survival-tension-and-clashes`** — The core is science survival and tension: the constant feeling that the owner could walk back in at any moment. The other half is clashes through the portal: fighting, killing or capturing aliens in other dimensions. Jokes stay, as seasoning.
-- **`tone-dry-plain-no-gore-horror`** — Dry jokes now and then, violence described plainly, tension and dread allowed, no gore horror ([profile](../../../Knowledge/ross-rustam-profile.md)).
+- **`tone-dry-plain-no-gore-horror`** — Dry jokes now and then, violence described plainly, tension and dread allowed, no gore horror ([his media rules](../../Ross%20Profile/Ross.html#me-media)).
 
 ## Width doctrine
 
@@ -35,7 +35,7 @@ A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty un
 
 ## Scope
 
-- **`ship-one-wide-slice-first`** — First build: the house, the garage and three portal destinations with a full set of chapter endings, playable on its own. Say plainly that it is one slice ([profile](../../../Knowledge/ross-rustam-profile.md) game shelf).
+- **`ship-one-wide-slice-first`** — First build: the house, the garage and three portal destinations with a full set of chapter endings, playable on its own. Say plainly that it is one slice ([game shelf](../../../Knowledge/game-development.md) game shelf).
 - **`validate-every-route-by-traversal`** — Check every storylet requirement, target and ending with an out-of-page traversal script before handing it over ([reports.md](../../../Knowledge/reports.md) `validate-a-branching-narrative-by-real-traversal`).
 
 ## His questionnaire answers (2026-10-29)
