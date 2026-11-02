@@ -30,7 +30,7 @@ A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty un
 ## Systems
 
 - **`systems-he-asked-for`** — Inventory grid, a portal map of destinations, puzzles, a home base to build up, stats and skills, a skill tree (learning Rick's science). Fights are story choices, and an enemy can be killed or captured. No timed choices. Death reloads the last save. Show "X will remember that" when a consequence lands. Difficulty fair: bad choices hurt.
-- **`no-images`** — No generated or scene images: the workspace has no image generator ([image.md](../../../Knowledge/image.md) `no-scripted-image-generator-exists`). Visuals come from code: procedural moving backgrounds (rain, fire, snow, portal glow), the map and the interface. Sound: ambient beds and music from the audio pipeline ([audio.md](../../../Knowledge/audio.md)).
+- **`no-images`** — No generated or scene images: the workspace has no image generator ([image.md](../../../Knowledge/image.md) `no-scripted-image-generator-exists`). Visuals come from code: procedural moving backgrounds (rain, fire, snow, portal glow), the map and the interface. Sound: ambient beds and music from the audio pipeline ([audio-video.md](../../../Knowledge/audio-video.md)).
 - **`long-pages-are-fine`** — He asked for fairly long text per screen (5 of 7 toward book pages).
 
 ## Scope
