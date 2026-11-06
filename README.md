@@ -2,7 +2,7 @@
 
 **Use when** designing, writing, building or testing the Rick & Morty choice-story RPG (a drifter who takes over Rick's abandoned house and garage), or deciding anything about its story, systems or scope.
 
-A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty universe. Private repository `Ross-ai-lab/finders-keepers`, checked out at `Ross/Github/Finders Keepers/`. Every ruling below is his, from the 2026-10-29 questionnaire and chat. Status: **first playable slice built** (see [Build status](#build-status)).
+A personal fan game for Ross: a text-first choice RPG set in the Rick & Morty universe. Public repository `Ross-ai-lab/finders-keepers`, checked out at `Ross/Github/Finders Keepers/`. Every ruling below is his, from the 2026-10-29 questionnaire and chat. Status: **first playable slice built** (see [Build status](#build-status)).
 
 ## Spoilers
 
